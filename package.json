@@ -9,6 +9,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^5.1.0"
+    "axios": "^1.12.2",
+    "express": "^5.1.0",
+    "ngrok": "^5.0.0-beta.2",
+    "node-fetch": "^3.3.2"
   }
 }

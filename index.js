@@ -2,6 +2,7 @@
 const express = require("express");
 const app = express();
 const port = 3000;
+const axios = require('axios');
 
 // Middleware para aceitar JSON no corpo da requisição
 app.use(express.json());
@@ -13,21 +14,36 @@ app.get("/", (req, res) => {
 
 // Rota que recebe o webhook do w-api
 app.post("/w-api/webhook", (req, res) => {
-  console.log("📩 Webhook recebido do w-api:");
-  console.log(req.body);
+  // console.log("📩 Webhook recebido do w-api:");
+  // console.log(req.body);
+  const token = 'SEU_TOKEN_AQUI';
+  Dados = {
+  "phone": req.body.chat.id,/* Telefone do destinatário*/
+  "message": "Olá, em que posso usar vc?.",
+  }
 
-  // aqui você pode salvar no banco, enviar para outra API, etc.
-  // Exemplo: se o webhook tiver um campo 'status'
+
+  axios.post('https://api.w-api.app/v1/message/send-text?instanceId=', 
+  Dados, // corpo da requisição
+  {
+    headers: {
+      'Authorization': `Bearer `,
+      'Content-Type': 'application/json'
+    }
+  }
+)
+.then(res => console.log(res.data))
+.catch(err => console.error(err.response ? err.response.data : err.message));
+
+
   if (req.body.status) {
     console.log(`Status recebido: ${req.body.status}`);
   }
 
-  // Sempre responder 200 para confirmar o recebimento
-  res.status(200).send({ message: "Webhook do w-api recebido com sucesso!" });
 });
 
 // Inicia o servidor
-app.listen(port, "0.0.0.0", () => {
+app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
   console.log(`Aguardando webhooks em http://localhost:${port}/w-api/webhook`);
 });
